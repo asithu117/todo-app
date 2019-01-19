@@ -26,21 +26,23 @@
         </div>
       </div>
     </main>
+    <router-link to="/todos">Todos</router-link>
+    <router-link to="/notes">Notes</router-link>
   </div>
 </template>
 
 <script>
-  import SystemInformation from './LandingPage/SystemInformation';
+  import SystemInformation from './LandingPage/SystemInformation'
 
   export default {
     name: 'landing-page',
     components: { SystemInformation },
     methods: {
       open(link) {
-        this.$electron.shell.openExternal(link);
+        this.$electron.shell.openExternal(link)
       },
     },
-  };
+  }
 </script>
 
 <style>

@@ -3,23 +3,45 @@
       <h1>TODOs</h1>
        <v-btn
         color="red lighten-2"
-        @click="lightOnOff"
-        dark
-      >
-        Turn On
-      </v-btn>
-       <v-btn
-        color="red lighten-2"
         @click="dialog = true"
         dark
       >
         ADD
       </v-btn>
-      <ul>
-        <li v-for="item in items" :key="item">
-          {{item}}
-       </li>
-      </ul>
+    <v-layout row>
+    <v-flex xs12 sm8 offset-sm2>
+      <v-card>
+        <v-toolbar color="cyan" dark>
+          <v-toolbar-side-icon></v-toolbar-side-icon>
+
+          <v-toolbar-title>Inbox</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn icon>
+            <v-icon>search</v-icon>
+          </v-btn>
+        </v-toolbar>
+
+        <v-list three-line>
+          <template v-for="(item, index) in items">
+          
+
+            <v-list-tile
+              :key="index"
+            >
+            
+
+              <v-list-tile-content>
+                <v-list-tile-title v-html="item"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < items.lenght" :key="`divider-${index}`"></v-divider>
+          </template>
+        </v-list>
+      </v-card>
+    </v-flex>
+  </v-layout>
     <v-dialog
       v-model="dialog"
       width="500"
@@ -74,10 +96,10 @@
         dialog: false,
         work: '',
         items: [],
-        light: false,
       }
     },
     mounted() {
+      this.items = this.$electron.ipcRenderer.sendSync('todo-list')
       this.$electron.ipcRenderer.on('todo-list', (event, data) => {
         this.items = data
       })
@@ -87,9 +109,6 @@
         console.log('save')
         this.dialog = false
         this.$electron.ipcRenderer.send('add-todo', this.work)
-      },
-      lightOnOff() {
-        this.$electron.ipcRenderer.send('gpio', { type: 'lamp', value: this.light })
       },
     },
   }

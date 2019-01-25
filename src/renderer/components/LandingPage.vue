@@ -28,8 +28,7 @@
     </main>
     <router-link to="/todos">Todos</router-link>
     <router-link to="/notes">Notes</router-link>
-    <v-spacer></v-spacer>
-    <router-link to="/board">Board</router-link>
+    
 
   </div>
 </template>

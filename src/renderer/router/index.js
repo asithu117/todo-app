@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/NotePage').default,
     },
     {
+      path: '/board',
+      name: 'board',
+      component: require('@/components/Board').default,
+    },
+    {
       path: '*',
       redirect: '/',
     },

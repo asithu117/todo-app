@@ -1,5 +1,7 @@
-import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, ipcMain } from 'electron'
+import io from 'socket.io-client' // eslint-disable-line
 import DataStore from '../renderer/DataStore'
+import Scale from '../Scale'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -47,6 +49,24 @@ const todos = new DataStore({ name: 'todos-db' })
 ipcMain.on('add-todo', (event, data) => {
   const dt = todos.addTodo(data)
   event.sender.send('todo-list', dt.todos) // prints "ping"
+})
+
+const socket = io('http://127.0.0.1:3000')
+socket.on('connect', () => {
+  console.log('connected to server')
+  ipcMain.on('gpio', (event, data) => {
+    console.log(data)
+    socket.emit('gpio', data) // prints "ping"
+  })
+  ipcMain.on('bgpio', (event, data) => {
+    console.log(data)
+    socket.emit('bgpio', data) // prints "ping"
+  })
+  const scale = new Scale((data) => {
+    console.log('receive app index', data)
+    socket.emit('weight', data)
+  })
+  console.log(scale)
 })
 /**
  * Auto Updater
